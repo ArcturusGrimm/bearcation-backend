@@ -1,115 +1,84 @@
 package bearcation.controller;
 
 
-import bearcation.model.Activity;
-import bearcation.model.MockLocation;
-import bearcation.model.User;
+import bearcation.model.dto.LocationDTO;
+import bearcation.model.requests.Activity;
+import bearcation.model.requests.CreateLocationRequest;
+import bearcation.model.requests.FindLocationRequest;
+import bearcation.model.requests.NationalPark;
 import bearcation.service.LocationService;
-import bearcation.model.Location;
-import bearcation.service.UserService;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import bearcation.utils.NPSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/location")
 public class LocationController {
-
-
-    @Autowired
-    private LocationService locationService;
+    private final LocationService locationService;
 
     @Autowired
-    private UserService userService;
-
-
-
-    @GetMapping("/locations")
-    public List<Location> getLocations() {
-        //return locationService.getLocations();
-        //"https://developer.nps.gov/api/v1/parks?limit=500&api_key=qBr4jhaew3bhpjs93sLuAmKBfjBUkhf935dop8a9"
-        StringBuffer content = new StringBuffer();
-        try {
-            URL url = new URL("https://developer.nps.gov/api/v1/parks?limit=500&api_key=qBr4jhaew3bhpjs93sLuAmKBfjBUkhf935dop8a9");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setConnectTimeout(2000);
-            con.setReadTimeout(2000);
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            in.close();
-            con.disconnect();
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            JsonNode rootNode = mapper.readTree(content.toString());
-            MockLocation[] mc = mapper.readValue(rootNode.get("data").toString(), MockLocation[].class);
-            //List<Location> locations = new ArrayList<>();
-            for(MockLocation m: mc){
-                Location l = new Location();
-                l.setName(m.getName());
-                l.setDescription(m.getDescription());
-                l.setLatitude(m.getLatitude());
-                l.setLongitude(m.getLongitude());
-                List<String> activities = new ArrayList<>();
-                for(Activity a : m.getActivities()){
-                    activities.add(a.getName());
-                }
-                l.setActivities(activities);
-                l.setOwner(userService.userById(1L));
-                l.setId(null);
-                locationService.createLocation(l);
-            }
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return locationService.getLocations();
-
-
+    public LocationController(LocationService locationService){
+        this.locationService = locationService;
     }
+    @PostMapping("/createLocation")
+    public LocationDTO createLocation(@RequestBody CreateLocationRequest createLocationRequest) {
+        return locationService.createLocation(createLocationRequest);
+    }
+
     @GetMapping("/search/{id}")
-    public Location getLocationById(@PathVariable long id){
-        return locationService.getLocationById(id);
+    public LocationDTO findLocationById(@PathVariable Long id){
+        return locationService.findLocationById(id);
     }
-    @GetMapping("/search/{longitude}/{latitude}/{price}")
-    public List<Location> getLocationsByAlgorithm(@PathVariable Double longitude, @PathVariable Double latitude, @PathVariable Double price){
-        return locationService.getLocationsByAlgorithm(longitude, latitude, price);
+    @GetMapping("/search/name/{name}")
+    public LocationDTO findLocationByName(@PathVariable String name){
+        return locationService.findLocationByName(name);
+    }
+    @GetMapping("/loadParks")
+    public List<LocationDTO> loadParks() {
+        NPSUtils parks = new NPSUtils();
+        List<NationalPark> npsParks = parks.getNationalParks();
+        for(NationalPark np : npsParks){
+            Set<String> activities = Arrays.stream(np.getActivities()).map(Activity::getName).collect(Collectors.toSet());
+            CreateLocationRequest createLocationRequest =
+                    new CreateLocationRequest(null, np.getName(), "",
+                            np.getDescription(), 0.0,
+                            np.getLatitude(), np.getLongitude(), activities);
+            locationService.createLocation(createLocationRequest);
+        }
+        return locationService.findAllLocations();
+    }
+    @GetMapping("/locations")
+    public List<LocationDTO> findAllLocations() {
+        return locationService.findAllLocations();
+    }
+    @GetMapping("/activities")
+    public Set<String> findAllActivities() {
+        return locationService.findAllActivities();
     }
 
-    @DeleteMapping("/delete/{name}")
-    public void deleteLocation(@PathVariable String name){
-        locationService.deleteLocation(name);
+    @PostMapping("/search")
+    public List<LocationDTO> getLocationsByAlgorithm(@RequestBody FindLocationRequest findLocationRequest){
+        List<LocationDTO> recommendation = locationService.findAllLocations();
+        Collections.shuffle(recommendation);
+        return recommendation.stream().limit(10).collect(Collectors.toList());
+//        return locationService.getRecommendedLocations(findLocationRequest.getLatitude(), findLocationRequest.getLongitude(),
+//                findLocationRequest.getPrice(), findLocationRequest.getActivities().stream().collect(Collectors.toSet()));
     }
 
-    @PutMapping("/update/{name}")
-    public void updateLocation(@PathVariable String name, @RequestBody Location location){
-        locationService.updateLocation(name, location);
-    }
+//    @GetMapping("/search/{latitude}/{longitude}/{price}/{activities}")
+//    public List<LocationDTO> getLocationsByAlgorithm(@PathVariable Double latitude, @PathVariable Double longitude,
+//                                                     @PathVariable Double price, @PathVariable Activity[] activities){
+//        return locationService.getRecommendedLocations(latitude, longitude, price, activities);
+//    }
 
 
-    @PostMapping("/addLocation")
-    public Location saveLocation(@RequestBody Location location){
-        return locationService.createLocation(location);
-    }
-
-
+//    @GetMapping("/search/{latitude}/{longitude}/{price}")
+//    public List<LocationDTO> getLocationsByAlgorithm(@PathVariable Double latitude, @PathVariable Double longitude,
+//                                                 @PathVariable Double price){
+//    return locationService.getRecommendedLocations(latitude, longitude, price, null);
+//    }
 }

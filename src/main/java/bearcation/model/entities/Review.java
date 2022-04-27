@@ -1,35 +1,31 @@
-package bearcation.model;
+package bearcation.model.entities;
 
-
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import lombok.*;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "reviews")
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="review_id")
-    private long id;
-    private @NonNull Double rating;
+    private Long id;
+    private Double rating;
     String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private @NonNull User reviewer;
+    private User reviewer;
 
     @ManyToOne
     @JoinColumn(name = "location_id")
-    private @NonNull Location location;
+    private Location location;
 
     public Review(Double rating, String description, User user, Location location) {
         super();
@@ -38,4 +34,5 @@ public class Review {
         this.reviewer = user;
         this.location = location;
     }
+
 }

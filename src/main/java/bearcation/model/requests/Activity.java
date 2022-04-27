@@ -1,4 +1,4 @@
-package bearcation.model;
+package bearcation.model.requests;
 
 import lombok.Data;
 

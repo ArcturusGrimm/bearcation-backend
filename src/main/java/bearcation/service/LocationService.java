@@ -1,62 +1,66 @@
 package bearcation.service;
 
-import bearcation.model.User;
-import bearcation.model.Location;
-import bearcation.model.Review;
-import bearcation.repository.UserRepository;
+import bearcation.model.dto.LocationDTO;
+import bearcation.model.entities.Location;
+import bearcation.model.entities.User;
+import bearcation.model.requests.Activity;
+import bearcation.model.requests.CreateLocationRequest;
 import bearcation.repository.LocationRepository;
-import bearcation.repository.ReviewRepository;
+import bearcation.repository.UserRepository;
+import bearcation.utils.MathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
 public class LocationService {
+    private final UserRepository userRepository;
+    private final LocationRepository locationRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private LocationRepository locationRepository;
-
-    @Autowired
-    private ReviewRepository reviewRepository;
-
-    public List<Location> getLocations() {
-        return this.locationRepository.findAll();
+    public LocationService(UserRepository userRepository, LocationRepository locationRepository){
+        this.userRepository = userRepository;
+        this.locationRepository = locationRepository;
     }
 
-    public Location createLocation(Location location){
-        userRepository.save(location.getOwner());
-        return locationRepository.save(location);
+    public LocationDTO createLocation(CreateLocationRequest createLocationRequest) {
+        /*User owner = userRepository.getById(createLocationRequest.getOwnerId());
+        Location location = new Location( owner,
+                createLocationRequest.getName(),
+                createLocationRequest.getAddress(),
+                createLocationRequest.getDescription(),
+                createLocationRequest.getPrice(),
+                createLocationRequest.getLatitude(),
+                createLocationRequest.getLongitude());*/
+        Location location = new Location(
+                createLocationRequest.getName(),
+                createLocationRequest.getDescription(),
+                createLocationRequest.getActivities());
+        return new LocationDTO(locationRepository.save(location));
     }
 
-    public Location getLocationById(long id) {
-        Optional<Location> optionalLocation= this.locationRepository.findById(id);
-        if (optionalLocation.isPresent()) {
-            return optionalLocation.get();
-        }
-        return null;
+    public LocationDTO findLocationById(Long id) {
+        return this.locationRepository.findById(id).map(LocationDTO::new).orElse(null);
     }
 
-    public void deleteLocation(String name) {
-        locationRepository.deleteByName(name);
+    public List<LocationDTO> findAllLocations() {
+        return this.locationRepository.findAll().stream().map(LocationDTO::new).collect(Collectors.toList());
     }
 
-    public void updateLocation(String name, Location location) {
-        locationRepository.save(location);
+    public List<LocationDTO> getRecommendedLocations(Double latitude, Double longitude, Double price, Set<String> activities) {
+        List<Location> locations = locationRepository.findAll();
+        locations.sort(Comparator.comparingInt(a -> calculateScore(a, latitude, longitude, price, activities)));
+        return locations.stream().map(LocationDTO::new).limit(10).collect(Collectors.toList());
     }
-    Integer calculateScore(Location location, Double latitude, Double longitude){
-        Double distance = this.calculateDistance(latitude, longitude, location.getLatitude(), location.getLongitude());
+
+    Integer calculateScore(Location location, Double latitude, Double longitude, Double price, Set<String> activities){
+        double distance = MathUtils.calculateDistance(latitude, longitude, location.getLatitude(), location.getLongitude());
         Double cost = location.getPrice();
 
-        Integer score = 0;
+        int score = 0;
         if(distance <= 50) {
             score += 100;
         }else if (distance <= 100) {
@@ -67,8 +71,6 @@ public class LocationService {
             score += 10;
         }
 
-        //score += activityCount < 25 ? activityCount * 2 : 50;
-
         if (cost <= location.getPrice()) {
             score += 50;
         } else if (cost <= location.getPrice() * 2) {
@@ -78,32 +80,13 @@ public class LocationService {
         }
 
         return score;
-
-    }
-    Double toRad(Double value) {
-        return (value * Math.PI) / 180.0;
     }
 
-    Double calculateDistance(Double slat1, Double long1, Double slat2, Double long2) {
-        double R = 3950.0; // km
-        //not sure if this is actual minus
-        double dLat = this.toRad(slat2 - slat1);
-        double dLong = this.toRad(long2 - long1);
-        double lat1 = this.toRad(slat1);
-        double lat2 = this.toRad(slat2);
-
-        double a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                        Math.sin(dLong / 2) * Math.sin(dLong / 2) * Math.cos(lat1) * Math.cos(lat2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
+    public Set<String> findAllActivities() {
+        return this.locationRepository.findAll().stream().map(Location::getActivities).flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
-    public List<Location> getLocationsByAlgorithm(Double longitude, Double latitude, Double price) {
-        List<Location> locations = locationRepository.findAll();
-
-        locations.sort(Comparator.comparingInt(a -> calculateScore(a, latitude, longitude)));
-        //locations.sort((a, b) -> Integer.compare(calculateScore(a, latitude, longitude), calculateScore(b, latitude, longitude)));
-        return null;
+    public LocationDTO findLocationByName(String name) {
+        return this.locationRepository.findLocationByName(name).map(LocationDTO::new).orElse(null);
     }
 }
