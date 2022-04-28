@@ -37,7 +37,8 @@ public class Location {
     private Set<String> activities;
 
     public Location(String name, String address, String description, Double price, Double latitude, Double longitude) {
-        this.owner = owner;
+        // FIXME: owner had self-assignment, (I put it to null temporarily)
+        this.owner = null;
         this.name = name;
         this.address = address;
         this.description = description;

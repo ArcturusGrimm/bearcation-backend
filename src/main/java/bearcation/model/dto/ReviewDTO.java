@@ -55,7 +55,7 @@ public class ReviewDTO {
         }
     }
 
-    public Review toReview(){
+    public Review toReview() {
         User reviewer = this.reviewer != null ? this.reviewer.toUser() : null;
         Location location = this.location != null ? this.location.toLocation() : null;
         return new Review(id, rating, description, reviewer, location);
