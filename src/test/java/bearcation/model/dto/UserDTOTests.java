@@ -9,8 +9,7 @@ import org.junit.jupiter.api.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Nested
 @DisplayName("User DTO Tests")
@@ -55,5 +54,11 @@ public class UserDTOTests {
         assertEquals(u.getLastName(), u2.getLastName());
         assertTrue(u.getPostedReviews().containsAll(u2.getPostedReviews()));
         assertTrue(u.getOwnedLocations().containsAll(u2.getOwnedLocations()));
+    }
+
+    @Test
+    @DisplayName("Test Null Value Constructor")
+    public void testNullValue() {
+        assertThrows(RuntimeException.class, () -> {new UserDTO(null);});
     }
 }
