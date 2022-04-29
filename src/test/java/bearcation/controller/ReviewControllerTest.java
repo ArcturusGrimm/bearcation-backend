@@ -20,9 +20,9 @@ public class ReviewControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @DisplayName("ReviewDTO test")
+    @DisplayName("createReview test")
     @Test
-    public void reviewDTOTest() throws Exception {
+    public void createReviewTest() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.post("/review/createReview")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"ownerId\":\"1\",\"locationName\":\"Alaska National Park\"," +
