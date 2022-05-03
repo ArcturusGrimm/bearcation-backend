@@ -36,15 +36,18 @@ public class Location {
     @ElementCollection
     private Set<String> activities;
 
-    public Location(String name, String address, String description, Double price, Double latitude, Double longitude) {
+    public Location(User owner, String name, String address, String description, Double price, Double latitude, Double longitude,
+                    Set<Review> reviews, Set<String> activities) {
         // FIXME: owner had self-assignment, (I put it to null temporarily)
-        this.owner = null;
+        this.owner = owner;
         this.name = name;
         this.address = address;
         this.description = description;
         this.price = price;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.reviews = reviews;
+        this.activities = activities;
     }
 
     public Location(String name, String description, Set<String> activities) {

@@ -12,4 +12,5 @@ public class NationalPark {
     private Double latitude;
     private Double longitude;
     private Activity[] activities;
+    private EntranceFees[] entranceFees;
 }
