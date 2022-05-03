@@ -7,6 +7,8 @@ import bearcation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
@@ -20,6 +22,10 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDTO findUserById(@PathVariable Long id){
         return userService.findUserById(id);
+    }
+    @GetMapping("/users")
+    public List<UserDTO> findAllUsers() {
+        return userService.findAllUsers();
     }
 
 }

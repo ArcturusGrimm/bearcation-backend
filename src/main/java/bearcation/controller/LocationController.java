@@ -79,7 +79,7 @@ public class LocationController {
     public List<LocationDTO> getLocationsByAlgorithm(@RequestBody FindLocationRequest findLocationRequest){
         List<LocationDTO> recommendation = locationService.findAllLocations();
         Collections.shuffle(recommendation);
-        return recommendation.stream().limit(10).collect(Collectors.toList());
+        return recommendation.stream().limit(3).collect(Collectors.toList());
 //        return locationService.getRecommendedLocations(findLocationRequest.getLatitude(), findLocationRequest.getLongitude(),
 //                findLocationRequest.getPrice(), findLocationRequest.getActivities().stream().collect(Collectors.toSet()));
     }

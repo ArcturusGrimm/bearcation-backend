@@ -1,5 +1,6 @@
 package bearcation.controller;
 
+import bearcation.model.dto.LocationDTO;
 import bearcation.model.dto.UserDTO;
 import bearcation.model.requests.CreateAccountRequest;
 import bearcation.model.requests.LoginRequest;
@@ -27,4 +28,9 @@ public class AccountController {
     public UserDTO createAccount(@RequestBody CreateAccountRequest createAccountRequest) {
         return accountService.createAccount(createAccountRequest);
     }
+    @PatchMapping("/editAccount")
+    public UserDTO editLocation(@RequestBody UserDTO editAccountRequest) {
+        return accountService.editAccount(editAccountRequest);
+    }
+
 }

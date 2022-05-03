@@ -32,8 +32,9 @@ public class ReviewService {
         this.locationRepository = locationRepository;
     }
     public ReviewDTO createReview(CreateReviewRequest createReviewRequest) {
-        Location park = locationRepository.findLocationByName(createReviewRequest.getLocationName()).orElse(null);
-        return new ReviewDTO(reviewRepository.save(new Review(createReviewRequest.getRating(), createReviewRequest.getDescription(), null, park)));
+        Location park = locationRepository.findLocationById(createReviewRequest.getLocationId()).orElse(null);
+        User u = userRepository.findUserById(createReviewRequest.getOwnerId()).orElse(null);
+        return new ReviewDTO(reviewRepository.save(new Review(createReviewRequest.getRating(), createReviewRequest.getDescription(), u, park)));
     }
 
     public List<ReviewDTO> findReviewsByLocation(Long id) {
