@@ -35,7 +35,7 @@ public class LocationService {
         location.setPrice(editLocationRequest.getPrice());
         location.setLatitude(editLocationRequest.getLatitude());
         location.setLongitude(editLocationRequest.getLongitude());
-        location.setActivities(editLocationRequest.getActivities());
+        //location.setActivities(editLocationRequest.getActivities());
         return new LocationDTO(locationRepository.save(location));
     }
 
@@ -44,6 +44,7 @@ public class LocationService {
         if(!(Objects.isNull(createLocationRequest.getOwnerId()))){
             Optional<User> optionalOwner = userRepository.findById(createLocationRequest.getOwnerId());
             owner = optionalOwner.get();
+            System.out.println("error");
         }
         Location location = new Location( owner,
                 createLocationRequest.getName(),

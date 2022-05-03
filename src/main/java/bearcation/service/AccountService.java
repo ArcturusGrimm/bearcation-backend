@@ -1,6 +1,8 @@
 package bearcation.service;
 
+import bearcation.model.dto.LocationDTO;
 import bearcation.model.dto.UserDTO;
+import bearcation.model.entities.Location;
 import bearcation.model.entities.User;
 import bearcation.model.requests.CreateAccountRequest;
 import bearcation.model.requests.LoginRequest;
@@ -24,5 +26,13 @@ public class AccountService {
 
     public UserDTO createAccount(CreateAccountRequest createAccountRequest) {
         return new UserDTO(userRepository.save(new User(createAccountRequest.getEmail(), createAccountRequest.getPassword(), createAccountRequest.getFirstName(), createAccountRequest.getLastName())));
+    }
+
+    public UserDTO editAccount(UserDTO editAccountRequest) {
+        User user = userRepository.findUserById(editAccountRequest.getId()).get();
+        user.setFirstName(editAccountRequest.getFirstName());
+        user.setLastName(editAccountRequest.getLastName());
+        user.setEmail(editAccountRequest.getEmail());
+        return new UserDTO(userRepository.save(user));
     }
 }
