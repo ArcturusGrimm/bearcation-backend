@@ -21,11 +21,11 @@ public class AccountService {
     }
 
     public UserDTO login(LoginRequest loginRequest) {
-        return userRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword()).map(UserDTO::new).orElse(null);
+        return userRepository.findByEmailAndPasswordAndRole(loginRequest.getEmail(), loginRequest.getPassword(), loginRequest.getRole()).map(UserDTO::new).orElse(null);
     }
 
     public UserDTO createAccount(CreateAccountRequest createAccountRequest) {
-        return new UserDTO(userRepository.save(new User(createAccountRequest.getEmail(), createAccountRequest.getPassword(), createAccountRequest.getFirstName(), createAccountRequest.getLastName())));
+        return new UserDTO(userRepository.save(new User(createAccountRequest.getEmail(), createAccountRequest.getPassword(), createAccountRequest.getFirstName(), createAccountRequest.getLastName(), createAccountRequest.getRole())));
     }
 
     public UserDTO editAccount(UserDTO editAccountRequest) {

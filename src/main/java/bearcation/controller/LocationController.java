@@ -57,7 +57,6 @@ public class LocationController {
             entranceFee = (fees.isEmpty()) ? 0.0 : fees.get(0);
             System.out.println(fees.toString());
 
-
             CreateLocationRequest createLocationRequest =
                     new CreateLocationRequest(null, np.getName(), "",
                             np.getDescription(), entranceFee,
@@ -80,8 +79,6 @@ public class LocationController {
         List<LocationDTO> recommendation = locationService.findAllLocations();
         Collections.shuffle(recommendation);
         return recommendation.stream().limit(3).collect(Collectors.toList());
-//        return locationService.getRecommendedLocations(findLocationRequest.getLatitude(), findLocationRequest.getLongitude(),
-//                findLocationRequest.getPrice(), findLocationRequest.getActivities().stream().collect(Collectors.toSet()));
     }
     @PostMapping("/search2")
     public List<LocationDTO> getLocationsByAlgorithm2(@RequestBody FindLocationRequest findLocationRequest){
@@ -93,27 +90,5 @@ public class LocationController {
     public List<LocationDTO> findReviewsByOwner(@PathVariable Long id){
         return locationService.findReviewsByOwner(id);
     }
-
-//     @GetMapping("/search")
-//     public List<LocationDTO> getLocationsByAlgorithm(){
-//         List<LocationDTO> recommendation = locationService.findAllLocations();
-//         Collections.shuffle(recommendation);
-//         return recommendation.stream().limit(3).collect(Collectors.toList());
-//          return locationService.getRecommendedLocations(findLocationRequest.getLatitude(), findLocationRequest.getLongitude(),
-//               findLocationRequest.getPrice(), findLocationRequest.getActivities().stream().collect(Collectors.toSet()));
-// }
-
-//    @GetMapping("/search/{latitude}/{longitude}/{price}/{activities}")
-//    public List<LocationDTO> getLocationsByAlgorithm(@PathVariable Double latitude, @PathVariable Double longitude,
-//                                                     @PathVariable Double price, @PathVariable Activity[] activities){
-//        return locationService.getRecommendedLocations(latitude, longitude, price, activities);
-//    }
-
-
-//    @GetMapping("/search/{latitude}/{longitude}/{price}")
-//    public List<LocationDTO> getLocationsByAlgorithm(@PathVariable Double latitude, @PathVariable Double longitude,
-//                                                 @PathVariable Double price){
-//    return locationService.getRecommendedLocations(latitude, longitude, price, null);
-//    }
 
 }
