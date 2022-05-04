@@ -19,6 +19,7 @@ public class UserDTO {
     private String password;
     private String firstName;
     private String lastName;
+    private String role;
     private Set<LocationDTO> ownedLocations;
     private Set<ReviewDTO> postedReviews;
 
@@ -30,6 +31,7 @@ public class UserDTO {
         firstName = user.getFirstName();
         lastName = user.getLastName();
         email = user.getEmail();
+        role = user.getRole();
         password = user.getPassword();
         ownedLocations = null;
         if (user.getOwnedLocations() != null) {
@@ -63,6 +65,6 @@ public class UserDTO {
     public User toUser() {
         Set<Location> ownedLocations = this.ownedLocations != null ? this.ownedLocations.stream().map(LocationDTO::toLocation).collect(Collectors.toSet()) : null;
         Set<Review> postedReviews = this.postedReviews != null ? this.postedReviews.stream().map(ReviewDTO::toReview).collect(Collectors.toSet()) : null;
-        return new User(id, email, password, firstName, lastName, ownedLocations, postedReviews);
+        return new User(id, email, password, firstName, lastName, role, ownedLocations, postedReviews);
     }
 }

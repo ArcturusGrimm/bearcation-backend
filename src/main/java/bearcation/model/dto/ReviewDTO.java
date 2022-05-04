@@ -33,6 +33,7 @@ public class ReviewDTO {
                     r.getPassword(),
                     r.getFirstName(),
                     r.getLastName(),
+                    r.getRole(),
                     null,
                     null
             );
