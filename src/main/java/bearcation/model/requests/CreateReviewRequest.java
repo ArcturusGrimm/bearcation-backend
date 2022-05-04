@@ -8,7 +8,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateReviewRequest {
     private Long ownerId;
-    private String locationName;
+    private Long locationId;
     private Double rating;
     private String description;
 }

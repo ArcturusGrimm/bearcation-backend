@@ -19,7 +19,7 @@ public class ReviewDTOTests {
     @Test
     @DisplayName("Test Review DTO constructor")
     public void testReviewDTOConstruct() {
-        User u = new User("timmy@gmail.com", "password", "timmy", "lastnameofmine");
+        User u = new User("timmy@gmail.com", "password", "timmy", "lastnameofmine", "Customer");
         Set<String> s = new HashSet<String>();
         s.add("act1");
         s.add("act2");
@@ -46,7 +46,7 @@ public class ReviewDTOTests {
     @Test
     @DisplayName("Test Rev DTO translate")
     public void testRevDTO() {
-        User u = new User("timmy@gmail.com", "password", "timmy", "lastnameofmine");
+        User u = new User("timmy@gmail.com", "password", "timmy", "lastnameofmine", "Customer");
         Set<String> s = new HashSet<String>();
         s.add("act1");
         s.add("act2");
