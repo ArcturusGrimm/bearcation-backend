@@ -18,18 +18,19 @@ public class UserDTOTests {
     @Test
     @DisplayName("Test User DTO constructor")
     public void testUserDTOConstructor() {
-        User u = new User("timmy@gmail.com", "password", "timmy", "mfoutchkeerr");
+        User u = new User("timmy@gmail.com", "password", "timmy", "mfoutchkeerr", "Customer");
         UserDTO udto = new UserDTO(u);
         assertEquals(udto.getEmail(), u.getEmail());
         assertEquals(udto.getPassword(), u.getPassword());
         assertEquals(udto.getFirstName(), u.getFirstName());
         assertEquals(udto.getLastName(), u.getLastName());
+        assertEquals(udto.getRole(), u.getRole());
     }
 
     @Test
     @DisplayName("User DTO Translation Test")
     public void testUserDTOTranslate() {
-        User u = new User("timmy@gmail.com", "password", "timmy", "mfoutchkeerr");
+        User u = new User("timmy@gmail.com", "password", "timmy", "mfoutchkeerr", "Customer");
         Review r1 = new Review(4.5, "aefeon", u, null);
         Review r2 = new Review(4.1, "wefkjbgew", u, null);
         Review r3 = new Review(5.0, "sefewegooivon", u, null);
@@ -54,6 +55,7 @@ public class UserDTOTests {
         assertEquals(u.getLastName(), u2.getLastName());
         assertTrue(u.getPostedReviews().containsAll(u2.getPostedReviews()));
         assertTrue(u.getOwnedLocations().containsAll(u2.getOwnedLocations()));
+        assertEquals(u.getRole(), u2.getRole());
     }
 
     @Test
