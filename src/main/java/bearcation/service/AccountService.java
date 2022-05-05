@@ -5,6 +5,7 @@ import bearcation.model.dto.UserDTO;
 import bearcation.model.entities.Location;
 import bearcation.model.entities.User;
 import bearcation.model.requests.CreateAccountRequest;
+import bearcation.model.requests.ForgotPasswordRequest;
 import bearcation.model.requests.LoginRequest;
 import bearcation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,17 @@ public class AccountService {
         user.setFirstName(editAccountRequest.getFirstName());
         user.setLastName(editAccountRequest.getLastName());
         user.setEmail(editAccountRequest.getEmail());
+        return new UserDTO(userRepository.save(user));
+    }
+
+
+    public UserDTO findByFirstNameAndEmail(ForgotPasswordRequest forgotPasswordRequest) {
+        return this.userRepository.findByFirstNameAndEmail(forgotPasswordRequest.getFirst(), forgotPasswordRequest.getEmail()).map(UserDTO::new).orElse(null);
+    }
+
+    public UserDTO updatePassword(ForgotPasswordRequest forgotPasswordRequest) {
+        User user = this.userRepository.findByFirstNameAndEmail(forgotPasswordRequest.getFirst(), forgotPasswordRequest.getEmail()).get();
+        user.setPassword(forgotPasswordRequest.getPassword());
         return new UserDTO(userRepository.save(user));
     }
 }

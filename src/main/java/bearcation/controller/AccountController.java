@@ -3,6 +3,7 @@ package bearcation.controller;
 import bearcation.model.dto.LocationDTO;
 import bearcation.model.dto.UserDTO;
 import bearcation.model.requests.CreateAccountRequest;
+import bearcation.model.requests.ForgotPasswordRequest;
 import bearcation.model.requests.LoginRequest;
 import bearcation.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,14 @@ public class AccountController {
     public UserDTO editLocation(@RequestBody UserDTO editAccountRequest) {
         return accountService.editAccount(editAccountRequest);
     }
+    @PostMapping("/forgotPassword")
+    public UserDTO forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        return accountService.findByFirstNameAndEmail(forgotPasswordRequest);
+    }
+    @PostMapping("/updatePassword")
+    public UserDTO updatePassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        return accountService.updatePassword(forgotPasswordRequest);
+    }
+
 
 }
