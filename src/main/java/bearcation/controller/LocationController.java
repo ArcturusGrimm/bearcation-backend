@@ -69,6 +69,11 @@ public class LocationController {
     public List<LocationDTO> findAllLocations() {
         return locationService.findAllLocations();
     }
+    @GetMapping("/locations/size")
+    public Integer findCountOfAllLocations() {
+        return locationService.findAllLocations().size();
+    }
+
     @GetMapping("/activities")
     public Set<String> findAllActivities() {
         return locationService.findAllActivities();

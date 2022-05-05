@@ -66,7 +66,9 @@ public class LocationService {
     }
 
     public List<LocationDTO> findAllLocations() {
-        return this.locationRepository.findAll().stream().map(LocationDTO::new).collect(Collectors.toList());
+        List<LocationDTO> all = this.locationRepository.findAll().stream().map(LocationDTO::new).collect(Collectors.toList());
+
+        return all;
     }
 
     public List<LocationDTO> getRecommendedLocations(Double latitude, Double longitude, Double price, Set<String> activities) {
