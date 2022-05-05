@@ -18,29 +18,30 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class userTest {
-//    User user = null;
-//    UserRepository repository = mock(UserRepository.class);
-//    UserService service = new UserService();
-//
-//    @Before
-//    public void setup(){
-//        user = new User();
-//        user.setId(123);
-//        user.setUsername("name");
-//        user.setPassword("abc");
-//    }
-//
-//    @Test
-//    public void testSearchById(){
-//        service.setUserRepository(repository);
-//        when(repository.findById((long)123)).thenReturn(Optional.ofNullable(user));
-//        assertEquals(user, service.userById(user.getId()));
-//    }
-//
-//    @Test
-//    public void testSearchByUser(){
-//        service.setUserRepository(repository);
-//        when(repository.findByUsernameAndPassword(user.getUsername(), user.getPassword())).thenReturn(Optional.ofNullable(user));
-//        assertEquals(user, service.userByUsernameAndPassword(user));
-//    }
+    User user = null;
+    UserRepository repository = mock(UserRepository.class);
+    UserService service = new UserService(repository);
+
+    @Before
+    public void setup(){
+        user = new User();
+        user.setId(123L);
+        user.setFirstName("name");
+        user.setLastName("name2");
+        user.setRole("Customer");
+        user.setPassword("abc");
+        user.setEmail("abc@gmail.com");
+    }
+
+    @Test
+    public void testSearchById(){
+        when(repository.findById((long)123)).thenReturn(Optional.ofNullable(user));
+        assertEquals(user, service.findUserById(user.getId()));
+    }
+
+    @Test
+    public void testSearchByUser(){
+        when(repository.findByEmailAndPasswordAndRole("abc@gmail.com", "abc", "Customer").orElse(null));
+        assertEquals(user, repository.findByEmailAndPasswordAndRole("abc@gmail.com", "abc", "Customer"));
+    }
 }
