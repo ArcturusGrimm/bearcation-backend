@@ -1,3 +1,14 @@
+# Bearcation by Software Savants (Group 3)
+
+## Group Members 
+- Francis Boyle
+- Patrick Boyle
+- Josh McKone
+- Timmy Frederiksen
+- Yangzekun Gao
+
+## Getting Started
+
 In order to start the project, clone the repository and make sure everything is installed correctly from the pom file.
 
 **Note: The application.properties file is setup for deployment and will currently not function on localhost**
