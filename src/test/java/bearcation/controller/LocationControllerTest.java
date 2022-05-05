@@ -60,7 +60,8 @@ public class LocationControllerTest {
         createLocationRequest.setOwnerId((long)123);
         createLocationRequest.setPrice(50.0);
 
-        location = new Location("Name", "Address", "Description", 50.0, 11.0, 10.0);
+        //location = new Location("Name", "Address", "Description", 50.0, 11.0, 10.0);
+        location = new Location("Name",  "Description", activities);
         locationDTO = new LocationDTO(location);
 
         List<String> list = new ArrayList<String>();

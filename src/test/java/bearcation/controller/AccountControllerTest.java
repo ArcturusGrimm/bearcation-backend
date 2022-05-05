@@ -32,7 +32,8 @@ public class AccountControllerTest {
 
     @Before
     public void setUp(){
-        loginRequest = new LoginRequest("Yangzekun_Gao1@Baylor.edu", "123456");
+        //loginRequest = new LoginRequest("Yangzekun_Gao1@Baylor.edu", "123456");
+        loginRequest = new LoginRequest("Yangzekun_Gao1@Baylor.edu", "123456", "customer");
     }
 
     // change the email value before each run in order to create a new account
