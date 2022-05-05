@@ -39,7 +39,6 @@ public class ReviewService {
 
     public List<ReviewDTO> findReviewsByLocation(Long id) {
         Location l = locationRepository.findLocationById(id).get();
-        System.out.println("pass");
         if ( !(reviewRepository.findReviewsByLocation(l).isPresent())){ return null;}
         return reviewRepository.findReviewsByLocation(l).get().stream().map(ReviewDTO::new).limit(10).collect(Collectors.toList());
     }
@@ -48,5 +47,10 @@ public class ReviewService {
         User u = userRepository.findUserById(id).get();
         if ( !(reviewRepository.findReviewsByReviewer(u).isPresent())){ return null;}
         return reviewRepository.findReviewsByReviewer(u).get().stream().map(ReviewDTO::new).limit(10).collect(Collectors.toList());
+    }
+
+    public Double findRatingByLocation(Long id) {
+        Location l = locationRepository.findLocationById(id).get();
+        return this.reviewRepository.findReviewsByLocation(l).get().stream().map(Review::getRating).mapToDouble(num -> (num)).average().orElse(0.0);
     }
 }

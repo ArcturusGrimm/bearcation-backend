@@ -31,29 +31,15 @@ public class ReviewController {
     public List<ReviewDTO> findReviewsByLocation(@PathVariable Long id){
         return reviewService.findReviewsByLocation(id);
     }
+    @GetMapping("/search/location/rating/{id}")
+    public Double findRatingByLocation(@PathVariable Long id){
+        return reviewService.findRatingByLocation(id);
+    }
 
     @GetMapping("/search/user/{id}")
     public List<ReviewDTO> findReviewsByReviewer(@PathVariable Long id){
         return reviewService.findReviewsByReviewer(id);
     }
 
-//
-//
-//    @GetMapping("/reviews")
-//    public List<Review> getReviewsByUserId() {
-//        return reviewService.getReviews();
-//    }
 }
 
-//    @Autowired
-//    private ReviewService reviewService;
-//
-//    @GetMapping("/reviews")
-//    public List<Review> getReviews() {
-//        return reviewService.getReviews();
-//    }
-//
-//    @PostMapping("/addReview")
-//    public Review saveReview(@RequestBody Review review){
-//        return reviewService.createReview(review);
-//    }

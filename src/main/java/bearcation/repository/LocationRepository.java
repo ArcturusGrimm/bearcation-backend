@@ -12,11 +12,13 @@ import java.util.Optional;
 public interface LocationRepository extends JpaRepository<Location, Long> {
     Optional<Location> findLocationByName(String name);
 
+
     void deleteById(Long id);
 
     Optional<Location> findLocationById(Long id);
 
     Optional<List<Location>> findLocationsByOwner(User u);
+
 
 
 }
